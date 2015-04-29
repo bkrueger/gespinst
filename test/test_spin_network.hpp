@@ -14,8 +14,8 @@ using namespace Gespinst;
 class TestSpinNetwork : public CppUnit::TestFixture
 {
 private:
-  SpinNetworkDynamic<IsingSpin>* testnetwork_dynamic;
-  SpinNetworkStatic<IsingSpin,2>* testnetwork_static;
+  SpinNetworkDynamic<IsingSpin<> >* testnetwork_dynamic;
+  SpinNetworkStatic<IsingSpin<>,2>* testnetwork_static;
 
 public:
   static CppUnit::Test* suite();

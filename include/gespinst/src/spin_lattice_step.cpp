@@ -36,8 +36,8 @@ double SpinLatticeStep<dimension, SpinType>::delta_E()
   for (typename std::vector<SpinType>::iterator neighbour = neighbours.begin();
        neighbour != neighbours.end(); ++neighbour)
   {
-    old_energy += - (_old_spin * (*neighbour));
-    new_energy += - (_new_spin * (*neighbour));
+    old_energy += _old_spin * (*neighbour);
+    new_energy += _new_spin * (*neighbour);
   }
 
   return new_energy - old_energy;

@@ -170,7 +170,7 @@ double SpinLatticeBase<dimension, SpinType, Derived>::energy() const
     for (typename std::vector<SpinType>::iterator neighbour = neighbours.begin();
 	 neighbour != neighbours.end(); ++neighbour)
     {
-      result += - (this_spin * (*neighbour));
+      result += this_spin * (*neighbour);
     }
   }
 

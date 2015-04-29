@@ -14,11 +14,11 @@ using namespace Gespinst;
 class TestSpinNetworkStep : public CppUnit::TestFixture
 {
 private:
-  typedef SpinNetworkStep<IsingSpin, std::array<IsingSpin*, 2> > StaticStepType;
-  typedef SpinNetworkStep<IsingSpin, std::vector<IsingSpin*> > DynamicStepType;
+  typedef SpinNetworkStep<IsingSpin<> , std::array<IsingSpin<>*, 2> > StaticStepType;
+  typedef SpinNetworkStep<IsingSpin<> , std::vector<IsingSpin<>*> > DynamicStepType;
 
-  SpinNetworkStatic<IsingSpin, 2>* testnetwork_static;
-  SpinNetworkDynamic<IsingSpin>* testnetwork_dynamic;
+  SpinNetworkStatic<IsingSpin<>, 2>* testnetwork_static;
+  SpinNetworkDynamic<IsingSpin<> >* testnetwork_dynamic;
 
   StaticStepType* test_static_step_0;
   StaticStepType* test_static_step_1;

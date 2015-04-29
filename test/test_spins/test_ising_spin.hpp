@@ -13,8 +13,10 @@ using namespace Gespinst;
 class TestIsingSpin : public CppUnit::TestFixture
 {
 private:
-  IsingSpin spin_up;
-  IsingSpin spin_down;
+  IsingSpin<SpinIsingInteractionType::Ferromagnetic> spin_up_ferro;
+  IsingSpin<SpinIsingInteractionType::Ferromagnetic> spin_down_ferro;
+  IsingSpin<SpinIsingInteractionType::Antiferromagnetic> spin_up_anti;
+  IsingSpin<SpinIsingInteractionType::Antiferromagnetic> spin_down_anti;
 
 public:
   static CppUnit::Test* suite();

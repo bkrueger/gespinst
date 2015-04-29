@@ -6,6 +6,7 @@
 // Header for the serialization of the class
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/array.hpp>
 
 namespace Gespinst
 {
@@ -27,11 +28,15 @@ namespace Gespinst
     typedef std::vector<ContainerType> neighbour_container_list;
     //! Typedef for the index
     typedef typename spin_container::size_type index_type;
-    
+    //! Typedef for the step
+    typedef SpinNetworkStep<SpinType, ContainerType> StepType;
+
     //! Default constructor
     SpinNetwork();
     //! Constructor with the number of spins and the default spin
     SpinNetwork(unsigned int spin_number, SpinType default_spin = SpinType());
+    //! Copy-constructor, is necessary to assign the neighbours correctly
+    SpinNetwork(const SpinNetwork& other) { *this = other; }
     
     //! Operator for write-access to the spin at given index
     SpinType& operator[](index_type index) { return spins[index]; }
@@ -46,6 +51,8 @@ namespace Gespinst
     //! Get-accessor for the simulation time
     int get_simulation_time() const { return simulation_time; }
 
+    //! Assignment operator
+    SpinNetwork& operator=(const SpinNetwork& other);
     //! Operator for testing equality
     bool operator==(const SpinNetwork<SpinType, ContainerType>& other) const;
     //! Operator for testing inequality
@@ -72,12 +79,13 @@ namespace Gespinst
     //! Calculate the system size (equals size)
     unsigned int system_size() const;
 
-  private:
+  protected:
     //! Vector of spins representing the different spins
     spin_container spins;
     //! Vector of containers for the next neighbours of each spin
     neighbour_container_list next_neighbour_spins;
 
+  private:
     //! Integer for the simulation time
     int simulation_time;
 
@@ -86,7 +94,7 @@ namespace Gespinst
     //! Method to serialize this class (omitted version name to avoid unused parameter warnings)
     template<class Archive> void serialize(Archive & ar, const unsigned int)
     {
-      ar & next_neighbour_spins;
+      //      ar & next_neighbour_spins;
       ar & simulation_time;
     }
 

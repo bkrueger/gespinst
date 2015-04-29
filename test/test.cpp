@@ -10,6 +10,7 @@
 #include "test_spin_lattice_step.hpp"
 #include "test_spin_network.hpp"
 #include "test_spin_network_step.hpp"
+#include "test_spin_lattice_triangular_2d.hpp"
 
 int main()
 {
@@ -22,6 +23,7 @@ int main()
   runner.addTest(TestSpinLatticeStep::suite());
   runner.addTest(TestSpinNetwork::suite());
   runner.addTest(TestSpinNetworkStep::suite());
+  runner.addTest(TestSpinLatticeTriangular2d::suite());
 
   CppUnit::BriefTestProgressListener listener; 
   runner.eventManager().addListener(&listener);

@@ -11,12 +11,16 @@
 namespace Gespinst
 {
 
+  //! Enum for specifying the type of interaction in the Ising-Spins
+  enum SpinIsingInteractionType { Ferromagnetic, Antiferromagnetic };
+  
   typedef int value_type_ising;
   
   /*!
    * \brief Class for Ising spins (up and down).
    * \author Benedikt Krüger
    */
+  template<int InteractionType = SpinIsingInteractionType::Ferromagnetic>
   class IsingSpin
   {
   private:
@@ -75,7 +79,8 @@ namespace Gespinst
       else _value = -1;
     }
     //! Friend operator for multiplying to spins to a double
-    friend double operator*(const IsingSpin& spin_1, const IsingSpin& spin_2);
+    template <int T>
+    friend double operator*(const IsingSpin<T>& spin_1, const IsingSpin<T>& spin_2);
 
     //! Create a vector with all different values of ising spins
     /*!
@@ -114,19 +119,28 @@ namespace Gespinst
     }
     
   };
+
+  //! Typedef for the non-template use of a ferromagnetic ising spin
+  typedef IsingSpin<SpinIsingInteractionType::Ferromagnetic> IsingSpinFerromagnetic;
+  typedef IsingSpin<SpinIsingInteractionType::Antiferromagnetic> IsingSpinAntiFerromagnetic;
   
   /*!
-   * \details Multiplies two Ising spins. The result is 1 if the two spins are equal and -1 of the two spins are not equal.
+   * \details Multiplies two Ising spins. The result is -1 if the two spins are equal and 1 of the two spins are not equal for ferromagnetic interaction, the result is 1 if the two spins are equal and -1 if the two spins are not equal for antiferromagnetic interaction.
    * \param spin_1 First Ising spin to multiply
    * \param spin_2 Second Ising spin to multiply
    */
-  inline double operator*(const IsingSpin& spin_1, const IsingSpin& spin_2)
+  template <int InteractionType>
+  inline double operator*(const IsingSpin<InteractionType>& spin_1, const IsingSpin<InteractionType>& spin_2)
   {
-    return spin_1._value * spin_2._value;
+    if (InteractionType == SpinIsingInteractionType::Ferromagnetic)
+      return -spin_1._value * spin_2._value;
+    else if (InteractionType == SpinIsingInteractionType::Antiferromagnetic)
+      return spin_1._value * spin_2._value;
   }
 
   //! Output stream operator for Ising Spin
-  inline std::ostream& operator<<(std::ostream& lhs, IsingSpin const& rhs)
+  template <int InteractionType>
+  inline std::ostream& operator<<(std::ostream& lhs, IsingSpin<InteractionType> const& rhs)
   {
     lhs << rhs.get_value();
     return lhs;

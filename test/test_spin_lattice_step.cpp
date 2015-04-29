@@ -21,8 +21,8 @@ CppUnit::Test* TestSpinLatticeStep::suite()
 void TestSpinLatticeStep::setUp()
 {
   // Assign the IsingSpins
-  spin_up = IsingSpin(1);
-  spin_down = IsingSpin(-1);
+  spin_up = IsingSpin<>(1);
+  spin_down = IsingSpin<>(-1);
 
   // Create the size vectors
   std::vector<unsigned int> size_1d;
@@ -31,8 +31,8 @@ void TestSpinLatticeStep::setUp()
   size_2d.push_back(3); size_2d.push_back(3);
 
   // Set up the lattices
-  testlattice_1d = new SpinLattice<1, IsingSpin>(size_1d);
-  testlattice_2d = new SpinLattice<2, IsingSpin>(size_2d);
+  testlattice_1d = new SpinLattice<1, IsingSpin<> >(size_1d);
+  testlattice_2d = new SpinLattice<2, IsingSpin<> >(size_2d);
 
   // Set up accessing indices
   index_0[0] = 0;
@@ -67,20 +67,20 @@ void TestSpinLatticeStep::setUp()
   testlattice_2d->set_spin(index_22, spin_up);
 
   // Set up the teststeps
-  teststep_1d_0 = new SpinLatticeStep<1, IsingSpin>(testlattice_1d, index_0, spin_down);
-  teststep_1d_1 = new SpinLatticeStep<1, IsingSpin>(testlattice_1d, index_1, spin_down);
-  teststep_1d_2 = new SpinLatticeStep<1, IsingSpin>(testlattice_1d, index_2, spin_up);
-  teststep_1d_3 = new SpinLatticeStep<1, IsingSpin>(testlattice_1d, index_3, spin_up);
-  teststep_1d_4 = new SpinLatticeStep<1, IsingSpin>(testlattice_1d, index_4, spin_down);
-  teststep_2d_00 = new SpinLatticeStep<2, IsingSpin>(testlattice_2d, index_00, spin_down);
-  teststep_2d_01 = new SpinLatticeStep<2, IsingSpin>(testlattice_2d, index_01, spin_down);
-  teststep_2d_02 = new SpinLatticeStep<2, IsingSpin>(testlattice_2d, index_02, spin_up);
-  teststep_2d_10 = new SpinLatticeStep<2, IsingSpin>(testlattice_2d, index_10, spin_up);
-  teststep_2d_11 = new SpinLatticeStep<2, IsingSpin>(testlattice_2d, index_11, spin_down);
-  teststep_2d_12 = new SpinLatticeStep<2, IsingSpin>(testlattice_2d, index_12, spin_up);
-  teststep_2d_20 = new SpinLatticeStep<2, IsingSpin>(testlattice_2d, index_20, spin_up);
-  teststep_2d_21 = new SpinLatticeStep<2, IsingSpin>(testlattice_2d, index_21, spin_up);
-  teststep_2d_22 = new SpinLatticeStep<2, IsingSpin>(testlattice_2d, index_22, spin_down);
+  teststep_1d_0 = new SpinLatticeStep<1, IsingSpin<> >(testlattice_1d, index_0, spin_down);
+  teststep_1d_1 = new SpinLatticeStep<1, IsingSpin<> >(testlattice_1d, index_1, spin_down);
+  teststep_1d_2 = new SpinLatticeStep<1, IsingSpin<> >(testlattice_1d, index_2, spin_up);
+  teststep_1d_3 = new SpinLatticeStep<1, IsingSpin<> >(testlattice_1d, index_3, spin_up);
+  teststep_1d_4 = new SpinLatticeStep<1, IsingSpin<> >(testlattice_1d, index_4, spin_down);
+  teststep_2d_00 = new SpinLatticeStep<2, IsingSpin<> >(testlattice_2d, index_00, spin_down);
+  teststep_2d_01 = new SpinLatticeStep<2, IsingSpin<> >(testlattice_2d, index_01, spin_down);
+  teststep_2d_02 = new SpinLatticeStep<2, IsingSpin<> >(testlattice_2d, index_02, spin_up);
+  teststep_2d_10 = new SpinLatticeStep<2, IsingSpin<> >(testlattice_2d, index_10, spin_up);
+  teststep_2d_11 = new SpinLatticeStep<2, IsingSpin<> >(testlattice_2d, index_11, spin_down);
+  teststep_2d_12 = new SpinLatticeStep<2, IsingSpin<> >(testlattice_2d, index_12, spin_up);
+  teststep_2d_20 = new SpinLatticeStep<2, IsingSpin<> >(testlattice_2d, index_20, spin_up);
+  teststep_2d_21 = new SpinLatticeStep<2, IsingSpin<> >(testlattice_2d, index_21, spin_up);
+  teststep_2d_22 = new SpinLatticeStep<2, IsingSpin<> >(testlattice_2d, index_22, spin_down);
 }
 void TestSpinLatticeStep::tearDown()
 {
@@ -90,7 +90,7 @@ void TestSpinLatticeStep::tearDown()
 
 void TestSpinLatticeStep::test_constructor()
 {
-  SpinLatticeStep<1, IsingSpin>* teststep_1d = new SpinLatticeStep<1, IsingSpin>(testlattice_1d, index_0, spin_down);
+  SpinLatticeStep<1, IsingSpin<> >* teststep_1d = new SpinLatticeStep<1, IsingSpin<> >(testlattice_1d, index_0, spin_down);
 }
 
 void TestSpinLatticeStep::test_get_flip_index()
@@ -172,7 +172,7 @@ void TestSpinLatticeStep::test_execute()
   teststep_1d_0->execute();
 
   // Test that the spin has the correct new value and that the energy us correct
-  CPPUNIT_ASSERT(testlattice_1d->get_spin(index_0) == IsingSpin(-1));
+  CPPUNIT_ASSERT(testlattice_1d->get_spin(index_0) == IsingSpin<>(-1));
   CPPUNIT_ASSERT_EQUAL(3.0, testlattice_1d->energy());
   // Test that the triangulation has the right simulation time
   CPPUNIT_ASSERT_EQUAL(1, testlattice_1d->get_simulation_time());
@@ -181,7 +181,7 @@ void TestSpinLatticeStep::test_execute()
   teststep_2d_10->execute();
   
   // Test that the spin has the correct new value and that the energy is correct
-  CPPUNIT_ASSERT(testlattice_2d->get_spin(index_10) == IsingSpin(1));
+  CPPUNIT_ASSERT(testlattice_2d->get_spin(index_10) == IsingSpin<>(1));
   CPPUNIT_ASSERT_EQUAL(6.0, testlattice_2d->energy());
   // Test that the triangulation has the right simulation time
   CPPUNIT_ASSERT_EQUAL(1, testlattice_2d->get_simulation_time());
@@ -195,7 +195,7 @@ void TestSpinLatticeStep::test_undo()
   teststep_1d_0->undo();
 
   // Test that the spin has the correct old value and that the energy us correct
-  CPPUNIT_ASSERT(testlattice_1d->get_spin(index_0) == IsingSpin(1));
+  CPPUNIT_ASSERT(testlattice_1d->get_spin(index_0) == IsingSpin<>(1));
   CPPUNIT_ASSERT_EQUAL(-1.0, testlattice_1d->energy());
   // Test that the triangulation has the right simulation time
   CPPUNIT_ASSERT_EQUAL(2, testlattice_1d->get_simulation_time());
@@ -206,7 +206,7 @@ void TestSpinLatticeStep::test_undo()
   teststep_2d_10->undo();
   
   // Test that the spin has the correct new value and that the energy is correct
-  CPPUNIT_ASSERT(testlattice_2d->get_spin(index_10) == IsingSpin(-1));
+  CPPUNIT_ASSERT(testlattice_2d->get_spin(index_10) == IsingSpin<>(-1));
   CPPUNIT_ASSERT_EQUAL(6.0, testlattice_2d->energy());
   // Test that the triangulation has the right simulation time
   CPPUNIT_ASSERT_EQUAL(2, testlattice_2d->get_simulation_time());

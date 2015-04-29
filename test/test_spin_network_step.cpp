@@ -19,31 +19,31 @@ CppUnit::Test* TestSpinNetworkStep::suite()
 void TestSpinNetworkStep::setUp()
 {
   // Set up the networks
-  testnetwork_static = new SpinNetworkStatic<IsingSpin,2>(3, IsingSpin(1));
-  testnetwork_dynamic = new SpinNetworkDynamic<IsingSpin>(3, IsingSpin(1));
+  testnetwork_static = new SpinNetworkStatic<IsingSpin<>,2>(3, IsingSpin<>(1));
+  testnetwork_dynamic = new SpinNetworkDynamic<IsingSpin<> >(3, IsingSpin<>(1));
   
   // Assign some differing spins
-  (*testnetwork_static)[0] = IsingSpin(-1);
-  (*testnetwork_dynamic)[0] = IsingSpin(-1);
+  (*testnetwork_static)[0] = IsingSpin<>(-1);
+  (*testnetwork_dynamic)[0] = IsingSpin<>(-1);
 
   // Set up the neighbours for the dynamic network
-  std::vector<IsingSpin*> neighbours_dynamic_0;
+  std::vector<IsingSpin<>*> neighbours_dynamic_0;
   neighbours_dynamic_0.push_back(&(*testnetwork_dynamic)[1]);
   neighbours_dynamic_0.push_back(&(*testnetwork_dynamic)[2]);
-  std::vector<IsingSpin*> neighbours_dynamic_1;
+  std::vector<IsingSpin<>*> neighbours_dynamic_1;
   neighbours_dynamic_1.push_back(&(*testnetwork_dynamic)[0]);
   neighbours_dynamic_1.push_back(&(*testnetwork_dynamic)[2]);
-  std::vector<IsingSpin*> neighbours_dynamic_2;
+  std::vector<IsingSpin<>*> neighbours_dynamic_2;
   neighbours_dynamic_2.push_back(&(*testnetwork_dynamic)[0]);
   neighbours_dynamic_2.push_back(&(*testnetwork_dynamic)[1]);
   // Set up the neighbpurs for the static network
-  std::array<IsingSpin*, 2> neighbours_static_0;
+  std::array<IsingSpin<>*, 2> neighbours_static_0;
   neighbours_static_0[0] = &(*testnetwork_dynamic)[1];
   neighbours_static_0[1] = &(*testnetwork_dynamic)[2];
-  std::array<IsingSpin*, 2> neighbours_static_1;
+  std::array<IsingSpin<>*, 2> neighbours_static_1;
   neighbours_static_1[0] = &(*testnetwork_dynamic)[0];
   neighbours_static_1[1] = &(*testnetwork_dynamic)[2];
-  std::array<IsingSpin*, 2> neighbours_static_2;
+  std::array<IsingSpin<>*, 2> neighbours_static_2;
   neighbours_static_2[0] = &(*testnetwork_dynamic)[0];
   neighbours_static_2[1] = &(*testnetwork_dynamic)[1];
   // Assign the neighbours
@@ -55,12 +55,12 @@ void TestSpinNetworkStep::setUp()
   testnetwork_static->set_neighbours(2, neighbours_static_2);
 
   // Create the steps
-  test_static_step_0 = new StaticStepType(testnetwork_static, 0, IsingSpin(1));
-  test_static_step_1 = new StaticStepType(testnetwork_static, 1, IsingSpin(-1));
-  test_static_step_2 = new StaticStepType(testnetwork_static, 2, IsingSpin(-1));
-  test_dynamic_step_0 = new DynamicStepType(testnetwork_dynamic, 0, IsingSpin(1));
-  test_dynamic_step_1 = new DynamicStepType(testnetwork_dynamic, 1, IsingSpin(-1));
-  test_dynamic_step_2 = new DynamicStepType(testnetwork_dynamic, 2, IsingSpin(-1));
+  test_static_step_0 = new StaticStepType(testnetwork_static, 0, IsingSpin<>(1));
+  test_static_step_1 = new StaticStepType(testnetwork_static, 1, IsingSpin<>(-1));
+  test_static_step_2 = new StaticStepType(testnetwork_static, 2, IsingSpin<>(-1));
+  test_dynamic_step_0 = new DynamicStepType(testnetwork_dynamic, 0, IsingSpin<>(1));
+  test_dynamic_step_1 = new DynamicStepType(testnetwork_dynamic, 1, IsingSpin<>(-1));
+  test_dynamic_step_2 = new DynamicStepType(testnetwork_dynamic, 2, IsingSpin<>(-1));
 }
 void TestSpinNetworkStep::tearDown()
 {
@@ -88,21 +88,21 @@ void TestSpinNetworkStep::test_get_flip_index()
 }
 void TestSpinNetworkStep::test_get_old_spin()
 {
-  CPPUNIT_ASSERT(test_static_step_0->get_old_spin() == IsingSpin(-1));
-  CPPUNIT_ASSERT(test_static_step_1->get_old_spin() == IsingSpin(1));
-  CPPUNIT_ASSERT(test_static_step_2->get_old_spin() == IsingSpin(1));
-  CPPUNIT_ASSERT(test_dynamic_step_0->get_old_spin() == IsingSpin(-1));
-  CPPUNIT_ASSERT(test_dynamic_step_1->get_old_spin() == IsingSpin(1));
-  CPPUNIT_ASSERT(test_dynamic_step_2->get_old_spin() == IsingSpin(1));
+  CPPUNIT_ASSERT(test_static_step_0->get_old_spin() == IsingSpin<>(-1));
+  CPPUNIT_ASSERT(test_static_step_1->get_old_spin() == IsingSpin<>(1));
+  CPPUNIT_ASSERT(test_static_step_2->get_old_spin() == IsingSpin<>(1));
+  CPPUNIT_ASSERT(test_dynamic_step_0->get_old_spin() == IsingSpin<>(-1));
+  CPPUNIT_ASSERT(test_dynamic_step_1->get_old_spin() == IsingSpin<>(1));
+  CPPUNIT_ASSERT(test_dynamic_step_2->get_old_spin() == IsingSpin<>(1));
 }
 void TestSpinNetworkStep::test_get_new_spin()
 {
-  CPPUNIT_ASSERT(test_static_step_0->get_new_spin() == IsingSpin(1));
-  CPPUNIT_ASSERT(test_static_step_1->get_new_spin() == IsingSpin(-1));
-  CPPUNIT_ASSERT(test_static_step_2->get_new_spin() == IsingSpin(-1));
-  CPPUNIT_ASSERT(test_dynamic_step_0->get_new_spin() == IsingSpin(1));
-  CPPUNIT_ASSERT(test_dynamic_step_1->get_new_spin() == IsingSpin(-1));
-  CPPUNIT_ASSERT(test_dynamic_step_2->get_new_spin() == IsingSpin(-1));
+  CPPUNIT_ASSERT(test_static_step_0->get_new_spin() == IsingSpin<>(1));
+  CPPUNIT_ASSERT(test_static_step_1->get_new_spin() == IsingSpin<>(-1));
+  CPPUNIT_ASSERT(test_static_step_2->get_new_spin() == IsingSpin<>(-1));
+  CPPUNIT_ASSERT(test_dynamic_step_0->get_new_spin() == IsingSpin<>(1));
+  CPPUNIT_ASSERT(test_dynamic_step_1->get_new_spin() == IsingSpin<>(-1));
+  CPPUNIT_ASSERT(test_dynamic_step_2->get_new_spin() == IsingSpin<>(-1));
 }
 void TestSpinNetworkStep::test_get_creation_simulation_time()
 {
@@ -129,12 +129,12 @@ void TestSpinNetworkStep::test_execute()
   test_static_step_1->execute();
   test_dynamic_step_1->execute();
 
-  CPPUNIT_ASSERT((*testnetwork_static)[0] == IsingSpin(-1));
-  CPPUNIT_ASSERT((*testnetwork_static)[1] == IsingSpin(-1));
-  CPPUNIT_ASSERT((*testnetwork_static)[2] == IsingSpin(1));
-  CPPUNIT_ASSERT((*testnetwork_dynamic)[0] == IsingSpin(-1));
-  CPPUNIT_ASSERT((*testnetwork_dynamic)[1] == IsingSpin(-1));
-  CPPUNIT_ASSERT((*testnetwork_dynamic)[2] == IsingSpin(1));
+  CPPUNIT_ASSERT((*testnetwork_static)[0] == IsingSpin<>(-1));
+  CPPUNIT_ASSERT((*testnetwork_static)[1] == IsingSpin<>(-1));
+  CPPUNIT_ASSERT((*testnetwork_static)[2] == IsingSpin<>(1));
+  CPPUNIT_ASSERT((*testnetwork_dynamic)[0] == IsingSpin<>(-1));
+  CPPUNIT_ASSERT((*testnetwork_dynamic)[1] == IsingSpin<>(-1));
+  CPPUNIT_ASSERT((*testnetwork_dynamic)[2] == IsingSpin<>(1));
 }
 
 void TestSpinNetworkStep::test_undo()
@@ -146,12 +146,12 @@ void TestSpinNetworkStep::test_undo()
   test_dynamic_step_0->undo();
 
   // Assert that everything is as before
-  CPPUNIT_ASSERT((*testnetwork_static)[0] == IsingSpin(-1));
-  CPPUNIT_ASSERT((*testnetwork_static)[1] == IsingSpin(1));
-  CPPUNIT_ASSERT((*testnetwork_static)[2] == IsingSpin(1));
-  CPPUNIT_ASSERT((*testnetwork_dynamic)[0] == IsingSpin(-1));
-  CPPUNIT_ASSERT((*testnetwork_dynamic)[1] == IsingSpin(1));
-  CPPUNIT_ASSERT((*testnetwork_dynamic)[2] == IsingSpin(1));
+  CPPUNIT_ASSERT((*testnetwork_static)[0] == IsingSpin<>(-1));
+  CPPUNIT_ASSERT((*testnetwork_static)[1] == IsingSpin<>(1));
+  CPPUNIT_ASSERT((*testnetwork_static)[2] == IsingSpin<>(1));
+  CPPUNIT_ASSERT((*testnetwork_dynamic)[0] == IsingSpin<>(-1));
+  CPPUNIT_ASSERT((*testnetwork_dynamic)[1] == IsingSpin<>(1));
+  CPPUNIT_ASSERT((*testnetwork_dynamic)[2] == IsingSpin<>(1));
   // Test that the simulation time has changed
   CPPUNIT_ASSERT_EQUAL(2, testnetwork_static->get_simulation_time());
   CPPUNIT_ASSERT_EQUAL(2, testnetwork_dynamic->get_simulation_time());

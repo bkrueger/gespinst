@@ -35,8 +35,8 @@ namespace Gespinst
     for (typename ContainerType::const_iterator neighbour = neighbours.begin();
 	 neighbour != neighbours.end(); ++neighbour)
       {
-	old_energy += - (old_spin * (**neighbour));
-	new_energy += - (new_spin * (**neighbour));
+	old_energy += old_spin * (**neighbour);
+	new_energy += new_spin * (**neighbour);
       }
     
     return new_energy - old_energy;

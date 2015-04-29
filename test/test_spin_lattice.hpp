@@ -13,18 +13,18 @@
 
 using namespace Gespinst;
 
-typedef boost::multi_array<IsingSpin, 1> lattice_array_type_1d;
+typedef boost::multi_array<IsingSpin<>, 1> lattice_array_type_1d;
 typedef boost::array<lattice_array_type_1d::index, 1> index_type_1d;
-typedef boost::multi_array<IsingSpin, 1> lattice_array_real_type_1d;
+typedef boost::multi_array<IsingSpin<>, 1> lattice_array_real_type_1d;
 typedef boost::array<lattice_array_type_1d::index, 1> index__real_type_1d;
-typedef boost::multi_array<IsingSpin, 2> lattice_array_type_2d;
+typedef boost::multi_array<IsingSpin<>, 2> lattice_array_type_2d;
 typedef boost::array<lattice_array_type_2d::index, 2> index_type_2d;
 
 class TestSpinLattice : public CppUnit::TestFixture
 {
 private:
-  SpinLattice<1, IsingSpin>* testlattice_1d;
-  SpinLattice<2, IsingSpin>* testlattice_2d;
+  SpinLattice<1, IsingSpin<> >* testlattice_1d;
+  SpinLattice<2, IsingSpin<> >* testlattice_2d;
   SpinLattice<2, PottsSpin>* testlattice_2d_potts;
   SpinLattice<1, RealSpin>* testlattice_1d_real;
   

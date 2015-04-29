@@ -1,6 +1,7 @@
 #ifdef GESPINST_SPIN_NETWORK_HPP
 
 #include <cmath>
+#include <map>
 
 namespace Gespinst
 {
@@ -12,6 +13,43 @@ namespace Gespinst
     : spins(spin_number, default_spin), next_neighbour_spins(spin_number), simulation_time(0) {}
 
   template<class SpinType, class ContainerType>
+  SpinNetwork<SpinType, ContainerType>& SpinNetwork<SpinType, ContainerType>::operator=(const SpinNetwork<SpinType, ContainerType>& other)
+  {
+    std::cout << "Assignment operator called!" << std::endl;
+
+    // Check for self assignment
+    if (&other == this) return *this;
+    
+    // Copy the spins, the next neighbours and the simulation time
+    spins = other.spins;
+    next_neighbour_spins = other.next_neighbour_spins;
+    simulation_time = other.simulation_time;
+    
+    // Create a map that maps the pointers of other spins to pointers of this spin
+    typedef std::map<const SpinType*, SpinType*> map_t;
+    map_t spin_other_to_this;
+    typename spin_container::const_iterator spin_other = other.spins.begin();
+    typename spin_container::iterator spin_this = spins.begin();
+    for (; spin_other != other.spins.end(); ++spin_other, ++spin_this)
+      spin_other_to_this.insert(typename map_t::value_type(&(*spin_other), &(*spin_this)));
+
+    // Assign the correct values of the spins pointers of the neighbours
+    for (unsigned int s = 0; s < other.spins.size(); ++s)
+    {
+      // Define the right containers and the iterators
+      ContainerType& next_neighbours_this = next_neighbour_spins[s];
+      const ContainerType& next_neighbours_other = other.next_neighbour_spins[s];
+      typename ContainerType::iterator neighbour_this = next_neighbours_this.begin();
+      typename ContainerType::const_iterator neighbour_other = next_neighbours_other.begin();
+      // Map the old spins to the new spins
+      for (; neighbour_this != next_neighbours_this.end(); ++neighbour_this, ++neighbour_other)
+	*neighbour_this = spin_other_to_this[*neighbour_other];
+    }
+
+    return *this;
+  }
+
+  template<class SpinType, class ContainerType>
   bool SpinNetwork<SpinType, ContainerType>::operator==(const SpinNetwork<SpinType, ContainerType>& other) const
   {
     // Test the vectors for equal size
@@ -21,20 +59,20 @@ namespace Gespinst
     for (typename spin_container::const_iterator spin = spins.begin(), other_spin = other.spins.begin(); spin != spins.end(); ++spin, ++other_spin)
       if ((*spin) != (*other_spin)) return false;
 
-    // Test that the structure of the next neighbours does match
-    for (typename neighbour_container_list::const_iterator spin_neighbours = next_neighbour_spins.begin(), other_spin_neighbour = other.next_neighbour_spins.begin();
-	 spin_neighbours != next_neighbour_spins.end(); ++spin_neighbours, ++other_spin_neighbour)
-    {
-      // Test for the size
-      if (spin_neighbours->size() != other_spin_neighbour->size()) return false;
+    // // Test that the structure of the next neighbours does match
+    // for (typename neighbour_container_list::const_iterator spin_neighbours = next_neighbour_spins.begin(), other_spin_neighbour = other.next_neighbour_spins.begin();
+    // 	 spin_neighbours != next_neighbour_spins.end(); ++spin_neighbours, ++other_spin_neighbour)
+    // {
+    //   // Test for the size
+    //   if (spin_neighbours->size() != other_spin_neighbour->size()) return false;
 
-      // Check that every spin has the same neighbours
-      for (typename ContainerType::const_iterator neighbour = spin_neighbours->begin(), other_neighbour = other_spin_neighbour->begin();
-	   neighbour != spin_neighbours->end(); ++neighbour, ++other_neighbour)
-      {
-	if ((**neighbour) != (**other_neighbour)) return false;
-      }
-    }
+    //   // Check that every spin has the same neighbours
+    //   for (typename ContainerType::const_iterator neighbour = spin_neighbours->begin(), other_neighbour = other_spin_neighbour->begin();
+    // 	   neighbour != spin_neighbours->end(); ++neighbour, ++other_neighbour)
+    //   {
+    // 	if ((**neighbour) != (**other_neighbour)) return false;
+    //   }
+    // }
 
     // If all checks were positive, return true
     return true;
@@ -90,16 +128,28 @@ namespace Gespinst
   {
     double result = 0;
 
-    typename spin_container::const_iterator spin = spins.begin();
-    typename neighbour_container_list::const_iterator neighbours = next_neighbour_spins.begin();
-    for (; spin != spins.end(); ++spin, ++neighbours)
+    for (typename spin_container::size_type spin_index = 0; spin_index < spins.size(); ++spin_index)
     {
-      for (typename ContainerType::const_iterator neighbour = neighbours->begin();
-	   neighbour != neighbours->end(); ++neighbour)
+      const ContainerType& neighbours = next_neighbour_spins[spin_index];
+      for (typename ContainerType::size_type neighbour_index = 0;
+	     neighbour_index != neighbours.size(); ++neighbour_index)
+      // for (typename ContainerType::const_iterator neighbour = neighbours.begin();
+      // 	   neighbour != neighbours.end(); ++neighbour)
       {
-	result += (*spin)*(**neighbour);
+	result += spins[spin_index] * (*neighbours[neighbour_index]);
       }
     }
+
+    // typename spin_container::const_iterator spin = spins.begin();
+    // typename neighbour_container_list::const_iterator neighbours = next_neighbour_spins.begin();
+    // for (; spin != spins.end(); ++spin, ++neighbours)
+    // {
+    //   for (typename ContainerType::const_iterator neighbour = neighbours->begin();
+    // 	   neighbour != neighbours->end(); ++neighbour)
+    //   {
+    // 	result += (*spin)*(**neighbour);
+    //   }
+    // }
 
     // Factor of 0.5 because energy is defined over all pairs of next neighbours, we count every pair twice
     return 0.5*result;

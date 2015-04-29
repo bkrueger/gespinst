@@ -40,8 +40,8 @@ void TestSpinLattice::setUp()
   size_2d.push_back(3); size_2d.push_back(3);
 
   // Set up the lattices
-  testlattice_1d = new SpinLattice<1, IsingSpin>(size_1d);
-  testlattice_2d = new SpinLattice<2, IsingSpin>(size_2d);
+  testlattice_1d = new SpinLattice<1, IsingSpin<> >(size_1d);
+  testlattice_2d = new SpinLattice<2, IsingSpin<> >(size_2d);
   testlattice_2d_potts = new SpinLattice<2, PottsSpin>(size_2d);
   testlattice_1d_real = new SpinLattice<1, RealSpin>(size_1d);
 
@@ -62,8 +62,8 @@ void TestSpinLattice::setUp()
   index_22[0] = 2; index_22[1] = 2;
 
   // Set up some spins
-  IsingSpin spin_up(1);
-  IsingSpin spin_down(-1);
+  IsingSpin<> spin_up(1);
+  IsingSpin<> spin_down(-1);
   PottsSpin spin_0(8,0);
   PottsSpin spin_1(8,1);
   PottsSpin spin_2(8,2);
@@ -114,18 +114,18 @@ void TestSpinLattice::tearDown()
 void TestSpinLattice::test_constructor()
 {
   std::vector<unsigned int> extent(1,5);
-  SpinLattice<1, IsingSpin> testlattice_default(extent, IsingSpin(-1));
-  CPPUNIT_ASSERT(testlattice_default.get_spin(index_0) == IsingSpin(-1));
-  CPPUNIT_ASSERT(testlattice_default.get_spin(index_1) == IsingSpin(-1));
-  CPPUNIT_ASSERT(testlattice_default.get_spin(index_2) == IsingSpin(-1));
-  CPPUNIT_ASSERT(testlattice_default.get_spin(index_3) == IsingSpin(-1));
-  CPPUNIT_ASSERT(testlattice_default.get_spin(index_4) == IsingSpin(-1));
+  SpinLattice<1, IsingSpin<> > testlattice_default(extent, IsingSpin<>(-1));
+  CPPUNIT_ASSERT(testlattice_default.get_spin(index_0) == IsingSpin<>(-1));
+  CPPUNIT_ASSERT(testlattice_default.get_spin(index_1) == IsingSpin<>(-1));
+  CPPUNIT_ASSERT(testlattice_default.get_spin(index_2) == IsingSpin<>(-1));
+  CPPUNIT_ASSERT(testlattice_default.get_spin(index_3) == IsingSpin<>(-1));
+  CPPUNIT_ASSERT(testlattice_default.get_spin(index_4) == IsingSpin<>(-1));
 }
 
 void TestSpinLattice::test_get_set_spin()
 {
-  IsingSpin spin_up(1);
-  IsingSpin spin_down(-1);
+  IsingSpin<> spin_up(1);
+  IsingSpin<> spin_down(-1);
 
   CPPUNIT_ASSERT_EQUAL(spin_up.get_value(), testlattice_1d->get_spin(index_0).get_value());
   CPPUNIT_ASSERT_EQUAL(spin_up.get_value(), testlattice_1d->get_spin(index_1).get_value());
@@ -162,8 +162,8 @@ void TestSpinLattice::test_get_simulation_time()
 void TestSpinLattice::test_operator_equal()
 {
   // Copy the spin lattices
-  SpinLattice<1, IsingSpin>* testlattice_1d_copy = new SpinLattice<1, IsingSpin>(*testlattice_1d);
-  SpinLattice<2, IsingSpin>* testlattice_2d_copy = new SpinLattice<2, IsingSpin>(*testlattice_2d);
+  SpinLattice<1, IsingSpin<> >* testlattice_1d_copy = new SpinLattice<1, IsingSpin<> >(*testlattice_1d);
+  SpinLattice<2, IsingSpin<> >* testlattice_2d_copy = new SpinLattice<2, IsingSpin<> >(*testlattice_2d);
   SpinLattice<1, RealSpin>* testlattice_1d_real_copy = new SpinLattice<1, RealSpin>(*testlattice_1d_real);
 
   // Test that these two lattices are equal with the original ones
@@ -172,8 +172,8 @@ void TestSpinLattice::test_operator_equal()
   CPPUNIT_ASSERT(*testlattice_1d_real_copy == *testlattice_1d_real);
 
   // Propose steps and execute them and check that the lattices are not equal
-  SpinLatticeStep<1, IsingSpin> step_1d = testlattice_1d->propose_step(0.5);
-  SpinLatticeStep<2, IsingSpin> step_2d = testlattice_2d->propose_step(0.5);
+  SpinLatticeStep<1, IsingSpin<> > step_1d = testlattice_1d->propose_step(0.5);
+  SpinLatticeStep<2, IsingSpin<> > step_2d = testlattice_2d->propose_step(0.5);
   SpinLatticeStep<1, RealSpin> step_1d_real = testlattice_1d_real->propose_step(0.5);
   step_1d.execute();
   step_2d.execute();
@@ -193,14 +193,14 @@ void TestSpinLattice::test_operator_equal()
 void TestSpinLattice::test_operator_equal_automatically()
 {
   // Copy the spin lattices
-  SpinLattice<1, IsingSpin>* testlattice_1d_copy = new SpinLattice<1, IsingSpin>(*testlattice_1d);
+  SpinLattice<1, IsingSpin<> >* testlattice_1d_copy = new SpinLattice<1, IsingSpin<> >(*testlattice_1d);
 
   // Propose and execute steps often on one of the test lattices and check that the comparison operator agrees with the output stream
   for (unsigned int i = 0; i < 10000; ++i)
   {
     // Propose and execute
     double random_double = static_cast<double>(rand())/RAND_MAX;
-    SpinLatticeStep<1, IsingSpin> step = testlattice_1d->propose_step(random_double);
+    SpinLatticeStep<1, IsingSpin<> > step = testlattice_1d->propose_step(random_double);
     step.execute();
 
     // Create the strings of the outstreams of the lattices
@@ -216,8 +216,8 @@ void TestSpinLattice::test_operator_equal_automatically()
 }
 void TestSpinLattice::test_operator_access()
 {
-  IsingSpin spin_up(1);
-  IsingSpin spin_down(-1);
+  IsingSpin<> spin_up(1);
+  IsingSpin<> spin_down(-1);
 
   CPPUNIT_ASSERT_EQUAL(spin_up.get_value(), (*testlattice_1d)(0).get_value());
   CPPUNIT_ASSERT_EQUAL(spin_up.get_value(), (*testlattice_1d)(1).get_value());
@@ -253,10 +253,10 @@ void TestSpinLattice::test_operator_access()
 
 void TestSpinLattice::test_all_steps()
 {
-  IsingSpin spin_up(1);
-  IsingSpin spin_down(-1);
+  IsingSpin<> spin_up(1);
+  IsingSpin<> spin_down(-1);
 
-  std::vector<SpinLatticeStep<1, IsingSpin> > possible_steps = testlattice_1d->all_steps();
+  std::vector<SpinLatticeStep<1, IsingSpin<> > > possible_steps = testlattice_1d->all_steps();
   CPPUNIT_ASSERT(possible_steps.size() == 5);
   CPPUNIT_ASSERT(possible_steps[0].get_lattice() == testlattice_1d);
   CPPUNIT_ASSERT(possible_steps[0].get_flip_index() == index_0);
@@ -287,7 +287,7 @@ void TestSpinLattice::test_energy()
 {
   CPPUNIT_ASSERT_EQUAL(-1.0, testlattice_1d->energy());
   CPPUNIT_ASSERT_EQUAL(6.0, testlattice_2d->energy());
-  CPPUNIT_ASSERT_EQUAL(0.36, testlattice_1d_real->energy());
+  CPPUNIT_ASSERT_EQUAL(-0.36, testlattice_1d_real->energy());
 }
 void TestSpinLattice::test_magnetization()
 {
@@ -296,8 +296,8 @@ void TestSpinLattice::test_magnetization()
 }
 void TestSpinLattice::test_next_neighbours()
 {
-  IsingSpin spin_up(1);
-  IsingSpin spin_down(-1);
+  IsingSpin<> spin_up(1);
+  IsingSpin<> spin_down(-1);
 
   CPPUNIT_ASSERT(testlattice_1d->next_neighbours(index_0).at(0) == spin_up);
   CPPUNIT_ASSERT(testlattice_1d->next_neighbours(index_0).at(1) == spin_up);
@@ -329,30 +329,30 @@ void TestSpinLattice::test_next_neighbours()
 }
 void TestSpinLattice::test_propose_step()
 {
-  IsingSpin spin_up(1);
-  IsingSpin spin_down(-1);
+  IsingSpin<> spin_up(1);
+  IsingSpin<> spin_down(-1);
 
-  SpinLatticeStep<1, IsingSpin> step_1d_0_1 = testlattice_1d->propose_step(0.1);
+  SpinLatticeStep<1, IsingSpin<> > step_1d_0_1 = testlattice_1d->propose_step(0.1);
   CPPUNIT_ASSERT(step_1d_0_1.get_lattice() == testlattice_1d);
   CPPUNIT_ASSERT(step_1d_0_1.get_flip_index() == index_0);
   CPPUNIT_ASSERT(step_1d_0_1.get_old_spin() == spin_up);
   CPPUNIT_ASSERT(step_1d_0_1.get_new_spin() == spin_down);
-  SpinLatticeStep<1, IsingSpin> step_1d_0_3 = testlattice_1d->propose_step(0.3);
+  SpinLatticeStep<1, IsingSpin<> > step_1d_0_3 = testlattice_1d->propose_step(0.3);
   CPPUNIT_ASSERT(step_1d_0_3.get_lattice() == testlattice_1d);
   CPPUNIT_ASSERT(step_1d_0_3.get_flip_index() == index_1);
   CPPUNIT_ASSERT(step_1d_0_3.get_old_spin() == spin_up);
   CPPUNIT_ASSERT(step_1d_0_3.get_new_spin() == spin_down);
-  SpinLatticeStep<1, IsingSpin> step_1d_0_5 = testlattice_1d->propose_step(0.5);
+  SpinLatticeStep<1, IsingSpin<> > step_1d_0_5 = testlattice_1d->propose_step(0.5);
   CPPUNIT_ASSERT(step_1d_0_5.get_lattice() == testlattice_1d);
   CPPUNIT_ASSERT(step_1d_0_5.get_flip_index() == index_2);
   CPPUNIT_ASSERT(step_1d_0_5.get_old_spin() == spin_down);
   CPPUNIT_ASSERT(step_1d_0_5.get_new_spin() == spin_up);
-  SpinLatticeStep<1, IsingSpin> step_1d_0_7 = testlattice_1d->propose_step(0.7);
+  SpinLatticeStep<1, IsingSpin<> > step_1d_0_7 = testlattice_1d->propose_step(0.7);
   CPPUNIT_ASSERT(step_1d_0_7.get_lattice() == testlattice_1d);
   CPPUNIT_ASSERT(step_1d_0_7.get_flip_index() == index_3);
   CPPUNIT_ASSERT(step_1d_0_7.get_old_spin() == spin_down);
   CPPUNIT_ASSERT(step_1d_0_7.get_new_spin() == spin_up);
-  SpinLatticeStep<1, IsingSpin> step_1d_0_9 = testlattice_1d->propose_step(0.9);
+  SpinLatticeStep<1, IsingSpin<> > step_1d_0_9 = testlattice_1d->propose_step(0.9);
   CPPUNIT_ASSERT(step_1d_0_9.get_lattice() == testlattice_1d);
   CPPUNIT_ASSERT(step_1d_0_9.get_flip_index() == index_4);
   CPPUNIT_ASSERT(step_1d_0_9.get_old_spin() == spin_up);
@@ -402,7 +402,7 @@ void TestSpinLattice::test_serialize()
   }
 
   // Create a new instance and load
-  SpinLattice<1, IsingSpin> testlattice_1d_loaded;
+  SpinLattice<1, IsingSpin<> > testlattice_1d_loaded;
   // Load data from archive
   {
     std::ifstream ifs("serialize.dat");
