@@ -15,8 +15,6 @@ namespace Gespinst
   template<class SpinType, class ContainerType>
   SpinNetwork<SpinType, ContainerType>& SpinNetwork<SpinType, ContainerType>::operator=(const SpinNetwork<SpinType, ContainerType>& other)
   {
-    std::cout << "Assignment operator called!" << std::endl;
-
     // Check for self assignment
     if (&other == this) return *this;
     
